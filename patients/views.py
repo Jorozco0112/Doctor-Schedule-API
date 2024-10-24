@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 
 from patients.serializers import PatientSerializer
 from patients.models import Patient
@@ -12,8 +13,13 @@ class PatientView(APIView):
     Lists all patients or creates a new patient, depending on the HTTP method.
     """
     allowed_methods = ['GET', 'POST']
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
 
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK:PatientSerializer
+        }
+    )
     def get(self, request):
         """
         Lists all patients.
@@ -42,7 +48,7 @@ class DetailPatientView(APIView):
     Retrieves, updates, or deletes a specific patient by ID, depending on the HTTP method.
     """
     allowed_methods = ['GET', 'PUT', 'DELETE']
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
 
     def get_patient(self, pk):
         """This function retrieve the patient object
