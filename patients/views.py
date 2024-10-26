@@ -1,12 +1,20 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView
+)
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
 
-from patients.serializers import PatientSerializer
-from patients.models import Patient
+from patients.serializers import (
+    PatientSerializer,
+    InsuranceSerializer,
+    MedicalRecordSerializer
+)
+from patients.models import Patient, Insurance, MedicalRecord
 
 class PatientView(APIView):
     """
@@ -81,3 +89,37 @@ class DetailPatientView(APIView):
             {'message': 'Patient deleted successfully'},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+class ListInsuranceView(ListCreateAPIView):
+    """This class handles POST and GET
+    method from Insurance entity"""
+    allowed_methods = ['GET', 'POST']
+    serializer_class = InsuranceSerializer
+    queryset = Insurance.objects.all()
+
+
+class DetailInsuranceView(RetrieveUpdateDestroyAPIView):
+    """This class handle GET, PUT and DELETE
+    method from Insurance entity
+    """
+    allowed_methods = ['GET', 'PUT', 'DELETE']
+    serializer_class = InsuranceSerializer
+    queryset = Insurance.objects.all()
+
+
+class ListMedicalRecordView(ListCreateAPIView):
+    """This class handles POST and GET
+    method from MedicalRecord entity"""
+    allowed_methods = ['GET', 'POST']
+    serializer_class = MedicalRecordSerializer
+    queryset = MedicalRecord.objects.all()
+
+
+class DetailMedicalRecordView(RetrieveUpdateDestroyAPIView):
+    """This class handle GET, PUT and DELETE
+    method from Medical Record entity
+    """
+    allowed_methods = ['GET', 'PUT', 'DELETE']
+    serializer_class = MedicalRecordSerializer
+    queryset = MedicalRecord.objects.all()
